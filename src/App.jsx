@@ -2,10 +2,16 @@ import React, { Fragment } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import routes from "./routes";
 import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
-
+import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+        }}
+      />
       <Router>
         <Routes>
           {routes.map((route) => {
