@@ -1,6 +1,7 @@
 import HomePage from "../pages/HomePage/HomePage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
-import Test from "../TestConnect";
+import Register from "../pages/auth/RegisterPage/Register";
+import LoginPage from "../pages/auth/LoginPage/Login";
 const routes = [
     {
         path: "/",
@@ -13,8 +14,13 @@ const routes = [
         isShowHeader: false
     },
     {
-        path: "/test",
-        page: Test,
+        path: "/register",
+        page: Register,
+        isShowHeader: false
+    },
+    {
+        path: "/login",
+        page: LoginPage,
         isShowHeader: false
     }
 ]
