@@ -25,7 +25,7 @@ const routes = [
         isShowHeader: false
     },
     {
-        path: "/otp",
+        path: "/verify-otp",
         page: OtpVerification,
         isShowHeader: false
     }

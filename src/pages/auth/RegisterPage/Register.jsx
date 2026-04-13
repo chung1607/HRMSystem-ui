@@ -4,6 +4,7 @@ import InputField from "../../../components/InputFieldComponent/InputFieldCompon
 import { register } from "../../../services/authServices";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { sendOtp } from "../../../services/authServices";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -31,7 +32,8 @@ export default function RegisterPage() {
 
       const res = await register(form);
       console.log("Register success:", res.data);
-      toast.success("Đăng ký thành công!");
+      await sendOtp(form.phone);
+      toast.success("Đăng ký thành công! Kiểm tra OTP");
       // reset form
       setForm({
         username: "",
@@ -39,9 +41,9 @@ export default function RegisterPage() {
         phone: "",
       });
 
-      // redirect sang login
-      navigate("/login");
-
+      navigate("/verify-otp", {
+        state: { phone: form.phone },
+      });
     } catch (err) {
       console.error(err);
 
@@ -57,7 +59,6 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md min-w-[360px] bg-white rounded-2xl border border-gray-200 shadow-lg p-6 sm:p-8">
-
         {/* Logo */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center">
@@ -85,7 +86,6 @@ export default function RegisterPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
           {/* Error */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">
@@ -122,7 +122,9 @@ export default function RegisterPage() {
           <Button
             type="submit"
             className={`w-full py-3 ${
-              loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"
+              loading
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
             }`}
           >
             {loading ? "Đang xử lý..." : "Đăng ký tài khoản"}
@@ -136,7 +138,8 @@ export default function RegisterPage() {
             và{" "}
             <a href="/privacy" className="text-blue-600 hover:underline">
               Chính sách bảo mật
-            </a>.
+            </a>
+            .
           </p>
         </form>
 
@@ -150,7 +153,6 @@ export default function RegisterPage() {
             Đăng nhập ngay
           </a>
         </p>
-
       </div>
     </div>
   );
