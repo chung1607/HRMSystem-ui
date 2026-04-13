@@ -2,6 +2,7 @@ import HomePage from "../pages/HomePage/HomePage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import Register from "../pages/auth/RegisterPage/Register";
 import LoginPage from "../pages/auth/LoginPage/Login";
+import OtpVerification from "../pages/auth/OtpVerificationPage/OtpVerification";
 const routes = [
     {
         path: "/",
@@ -21,6 +22,11 @@ const routes = [
     {
         path: "/login",
         page: LoginPage,
+        isShowHeader: false
+    },
+    {
+        path: "/verify-otp",
+        page: OtpVerification,
         isShowHeader: false
     }
 ]
