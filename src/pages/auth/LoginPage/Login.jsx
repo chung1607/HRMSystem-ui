@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../../../components/ButtonComponent/ButtonComponent";
 import InputField from "../../../components/InputFieldComponent/InputFieldComponent";
 import { login } from "../../../services/authServices";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
@@ -46,6 +46,9 @@ export default function LoginPage() {
       // lưu token
       localStorage.setItem("access_token", res.data.access_token);
       localStorage.setItem("refresh_token", res.data.refresh_token);
+
+      const decoded = JSON.parse(atob(res.data.access_token.split(".")[1]));
+      localStorage.setItem("userRole", decoded.role);
 
       navigate("/");
     } catch (err) {
@@ -98,7 +101,7 @@ export default function LoginPage() {
             name="identifier"
             value={form.identifier}
             onChange={handleChange}
-            placeholder="vd: nguyenvana hoặc 0903..."
+            placeholder="Tên đăng nhập & Sđt"
           />
 
           <InputField
@@ -118,6 +121,17 @@ export default function LoginPage() {
           >
             {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </Button>
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-600">
+              Chưa có tài khoản?{" "}
+              <Link
+                to="/register"
+                className="text-blue-600 font-semibold hover:underline"
+              >
+                Đăng ký ngay
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
     </div>
