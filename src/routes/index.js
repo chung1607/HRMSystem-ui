@@ -5,6 +5,7 @@ import LoginPage from "../pages/auth/LoginPage/Login";
 import OtpVerification from "../pages/auth/OtpVerificationPage/OtpVerification";
 import AdminDashboard from "../pages/admin/AdminDashboard/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers/AdminUsers";
+import UsersPage from "../pages/UsersPage";
 const routes = [
   {
     path: "/",
@@ -34,11 +35,16 @@ const routes = [
   {
     path: "/admin/dashboard",
     page: AdminDashboard,
-    isShowHeader: false,
+    isShowHeader: true,
   },
   {
     path: "/admin/users",
     page: AdminUsers,
+    isShowHeader: true,
+  },
+  {
+    path: "/testui",
+    page: UsersPage,
     isShowHeader: false,
   },
 ];
