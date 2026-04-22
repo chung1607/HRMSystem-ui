@@ -5,7 +5,8 @@ import LoginPage from "../pages/auth/LoginPage/Login";
 import OtpVerification from "../pages/auth/OtpVerificationPage/OtpVerification";
 import AdminDashboard from "../pages/admin/AdminDashboard/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers/AdminUsers";
-import UsersPage from "../pages/UsersPage";
+import AdminOwnerRequest from "../pages/admin/AdminOwnerRequest/AdminOwnerRequest";
+import AdminTeams from "../pages/admin/AdminTeams/AdminTeams";
 const routes = [
   {
     path: "/",
@@ -43,9 +44,14 @@ const routes = [
     isShowHeader: true,
   },
   {
-    path: "/testui",
-    page: UsersPage,
-    isShowHeader: false,
+    path: "/admin/requests",
+    page: AdminOwnerRequest,
+    isShowHeader: true,
+  },
+  {
+    path: "/admin/teams",
+    page: AdminTeams,
+    isShowHeader: true,
   },
 ];
 
