@@ -16,8 +16,9 @@ import {
 } from "recharts";
 import AdminLayout from "../../../components/AdminLayout/AdminLayout";
 import NotFoundPage from "../../NotFoundPage/NotFoundPage";
-import ActionCards from "../../../components/ActionCards/ActionCards";
 import DataTable from "../../../components/table/DataTable";
+import { getDashboardStats } from "../../../services/adminServices";
+import CountUp from "react-countup";
 
 // Data mẫu
 const lineData = [
@@ -53,14 +54,32 @@ const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalOwners: 0,
+    totalTeams: 0,
+    totalEmployees: 0,
+  });
 
   useEffect(() => {
     const userRole = localStorage.getItem("userRole");
     if (userRole === "admin") {
       setIsAdmin(true);
+      fetchDashboardStats();
     }
     setLoading(false);
   }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      const response = await getDashboardStats();
+      setStats(response.data);
+    } catch (error) {
+      console.error("Failed to fetch dashboard stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -86,25 +105,35 @@ export default function AdminDashboard() {
             <div className="text-gray-500 text-sm font-medium">
               Tổng số người dùng (users)
             </div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">1,234</div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">
+              <CountUp end={stats.totalUsers.toLocaleString()} duration={5} separator="," />
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600">
-            <div className="text-gray-500 text-sm font-medium">Tổng số chủ quản lý (owners)</div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">780</div>
+            <div className="text-gray-500 text-sm font-medium">
+              Tổng số chủ quản lý (owners)
+            </div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">
+              <CountUp end={stats.totalOwners.toLocaleString()} duration={5} separator="," />
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-600">
-            <div className="text-gray-500 text-sm font-medium">Tổng số tổ công (teams)</div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">156</div>
+            <div className="text-gray-500 text-sm font-medium">
+              Tổng số tổ công (teams)
+            </div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">
+              <CountUp end={stats.totalTeams.toLocaleString()} duration={5} separator="," />
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600">
             <div className="text-gray-500 text-sm font-medium">
               Tổng số nhân công (employees)
             </div>
-            <div className="text-3xl font-bold text-gray-900 mt-2">24</div>
+            <div className="text-3xl font-bold text-gray-900 mt-2">
+              <CountUp end={stats.totalEmployees.toLocaleString()} duration={5} separator="," />
+            </div>
           </div>
         </div>
-
-        <ActionCards />
 
         <DataTable />
 

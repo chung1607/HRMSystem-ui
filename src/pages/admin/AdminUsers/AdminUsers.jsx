@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../../../components/AdminLayout/AdminLayout";
 import NotFoundPage from "../../NotFoundPage/NotFoundPage";
+import UserTable from "../../../components/table/UserTable";
 
 export default function AdminUsers() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -31,6 +32,7 @@ export default function AdminUsers() {
             Xem và quản lý tất cả người dùng trong hệ thống
           </p>
         </div>
+        <UserTable />
       </div>
     </AdminLayout>
   );
