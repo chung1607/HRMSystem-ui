@@ -23,3 +23,15 @@ export const getAllUsers = (query = {}) => {
   if (query.search) params.append("search", query.search);
   return axios.get(`${USER_API_URL}?${params.toString()}`);
 };
+
+export const disableUser = (id) => {
+  return axios.patch(`${API_URL}/users/${id}/disable`);
+};
+
+export const enableUser = (id) => {
+  return axios.patch(`${API_URL}/users/${id}/enable`);
+};
+
+export const changeUserRole = (id, role) => {
+  return axios.patch(`${API_URL}/users/${id}/role`, { role });
+};
