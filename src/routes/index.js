@@ -5,6 +5,8 @@ import LoginPage from "../pages/auth/LoginPage/Login";
 import OtpVerification from "../pages/auth/OtpVerificationPage/OtpVerification";
 import AdminDashboard from "../pages/admin/AdminDashboard/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers/AdminUsers";
+import AdminOwnerRequest from "../pages/admin/AdminOwnerRequest/AdminOwnerRequest";
+import AdminTeams from "../pages/admin/AdminTeams/AdminTeams";
 const routes = [
   {
     path: "/",
@@ -34,12 +36,22 @@ const routes = [
   {
     path: "/admin/dashboard",
     page: AdminDashboard,
-    isShowHeader: false,
+    isShowHeader: true,
   },
   {
     path: "/admin/users",
     page: AdminUsers,
-    isShowHeader: false,
+    isShowHeader: true,
+  },
+  {
+    path: "/admin/requests",
+    page: AdminOwnerRequest,
+    isShowHeader: true,
+  },
+  {
+    path: "/admin/teams",
+    page: AdminTeams,
+    isShowHeader: true,
   },
 ];
 
