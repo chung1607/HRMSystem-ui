@@ -89,13 +89,12 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <div className="h-full overflow-y-auto">
-        {/* Header */}
-        <div className="mb-8">
+      <div className="w-full">
+        <div className="mb-6 md:mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-2">
             Dashboard
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-sm md:text-base text-zinc-500">
             Chào mừng đến trang quản trị hệ thống
           </p>
         </div>
@@ -106,7 +105,11 @@ export default function AdminDashboard() {
               Tổng số người dùng (users)
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
-              <CountUp end={stats.totalUsers.toLocaleString()} duration={5} separator="," />
+              <CountUp
+                end={stats.totalUsers.toLocaleString()}
+                duration={5}
+                separator=","
+              />
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600">
@@ -114,7 +117,11 @@ export default function AdminDashboard() {
               Tổng số chủ quản lý (owners)
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
-              <CountUp end={stats.totalOwners.toLocaleString()} duration={5} separator="," />
+              <CountUp
+                end={stats.totalOwners.toLocaleString()}
+                duration={5}
+                separator=","
+              />
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-600">
@@ -122,7 +129,11 @@ export default function AdminDashboard() {
               Tổng số tổ công (teams)
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
-              <CountUp end={stats.totalTeams.toLocaleString()} duration={5} separator="," />
+              <CountUp
+                end={stats.totalTeams.toLocaleString()}
+                duration={5}
+                separator=","
+              />
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600">
@@ -130,7 +141,11 @@ export default function AdminDashboard() {
               Tổng số nhân công (employees)
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
-              <CountUp end={stats.totalEmployees.toLocaleString()} duration={5} separator="," />
+              <CountUp
+                end={stats.totalEmployees.toLocaleString()}
+                duration={5}
+                separator=","
+              />
             </div>
           </div>
         </div>

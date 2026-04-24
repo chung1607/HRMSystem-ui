@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000/admin";
 const USER_API_URL = "http://localhost:3000/user";
+const OWNER_API_URL = "http://localhost:3000/owner-requests";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
@@ -34,4 +35,16 @@ export const enableUser = (id) => {
 
 export const changeUserRole = (id, role) => {
   return axios.patch(`${API_URL}/users/${id}/role`, { role });
+};
+
+export const getOwnerRequests = () => {
+  return axios.get(`${OWNER_API_URL}`);
+};
+
+export const approveOwnerRequest = (id) => {
+  return axios.patch(`${OWNER_API_URL}/${id}/approve`);
+};
+
+export const rejectOwnerRequest = (id) => {
+  return axios.patch(`${OWNER_API_URL}/${id}/reject`);
 };
