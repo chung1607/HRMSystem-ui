@@ -1,4 +1,5 @@
 import { FiSearch } from "react-icons/fi";
+
 export default function OwnerRequestsTable() {
   const data = [
     {
@@ -21,7 +22,6 @@ export default function OwnerRequestsTable() {
       count: 87,
       joinDate: "03/03/2024",
     },
-    // ... thêm dữ liệu khác
   ];
 
   const getRoleColor = (role) => {
@@ -40,24 +40,24 @@ export default function OwnerRequestsTable() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold flex items-center justify-between mb-5">
-          <span>Quản lý người dùng</span>
-        </h3>
-        <div className="flex gap-2 items-center relative">
-          <FiSearch className="absolute left-3 text-gray-400" />
+    <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-5">
+        <h3 className="text-lg sm:text-xl font-semibold">Owner Requests</h3>
 
+        <div className="relative w-full sm:w-72">
+          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder="Tìm kiếm..."
-            className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           />
         </div>
       </div>
 
+      {/* Responsive table */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+        <table className="w-full min-w-[900px] text-left text-sm">
           <thead>
             <tr className="text-gray-600 border-b font-medium">
               <th className="py-3 px-4">NGƯỜI DÙNG</th>
@@ -68,6 +68,7 @@ export default function OwnerRequestsTable() {
               <th className="py-3 px-4 text-center">ACTION</th>
             </tr>
           </thead>
+
           <tbody>
             {data.map((item) => (
               <tr
@@ -81,33 +82,47 @@ export default function OwnerRequestsTable() {
                     </div>
                     <div>
                       <p className="font-medium">{item.name}</p>
-                      <p className="text-xs text-gray-500">{item.email}</p>
+                      <p className="text-xs text-gray-500 break-all">
+                        {item.email}
+                      </p>
                     </div>
                   </div>
                 </td>
+
                 <td className="py-3 px-4">
                   <span
-                    className={`px-3 py-1 rounded text-xs font-medium ${getRoleColor(item.role)}`}
+                    className={`px-3 py-1 rounded text-xs font-medium ${getRoleColor(
+                      item.role,
+                    )}`}
                   >
                     {item.role}
                   </span>
                 </td>
+
                 <td className="py-3 px-4">
                   <span
-                    className={`px-3 py-1 rounded text-xs font-medium ${getStatusColor(item.status)}`}
+                    className={`px-3 py-1 rounded text-xs font-medium ${getStatusColor(
+                      item.status,
+                    )}`}
                   >
                     {item.status}
                   </span>
                 </td>
+
                 <td className="py-3 px-4">{item.count}</td>
+
                 <td className="py-3 px-4">{item.joinDate}</td>
-                <td className="py-3 px-4 text-center space-x-2">
-                  <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
-                    Approve
-                  </button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
-                    Reject
-                  </button>
+
+                <td className="py-3 px-4">
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                    <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
+                      Approve
+                    </button>
+
+                    <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
+                      Reject
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

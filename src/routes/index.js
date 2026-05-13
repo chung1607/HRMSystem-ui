@@ -7,6 +7,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers/AdminUsers";
 import AdminOwnerRequest from "../pages/admin/AdminOwnerRequest/AdminOwnerRequest";
 import AdminTeams from "../pages/admin/AdminTeams/AdminTeams";
+import Test from "../TestConnect";
 const routes = [
   {
     path: "/",
@@ -52,6 +53,11 @@ const routes = [
     path: "/admin/teams",
     page: AdminTeams,
     isShowHeader: true,
+  },
+  {
+    path: "/test",
+    page: Test,
+    isShowHeader: false,
   },
 ];
 

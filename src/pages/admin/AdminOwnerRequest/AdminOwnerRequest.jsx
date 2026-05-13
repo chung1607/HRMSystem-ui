@@ -128,7 +128,7 @@ export default function AdminOwnerRequest() {
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
           {fetching && requests.length === 0 ? (
             <div className="text-center py-8">Đang tải...</div>
           ) : error ? (
@@ -139,7 +139,7 @@ export default function AdminOwnerRequest() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full min-w-[900px] text-left text-sm">
                 <thead>
                   <tr className="text-gray-600 border-b font-medium">
                     <th className="py-3 px-4">TÊN</th>
@@ -159,24 +159,29 @@ export default function AdminOwnerRequest() {
                       <td className="py-3 px-4 font-medium">
                         {request.user.username}
                       </td>
+
                       <td className="py-3 px-4 text-gray-600">
                         {request.description}
                       </td>
+
                       <td className="py-3 px-4">
                         {getStatusBadge(request.status)}
                       </td>
+
                       <td className="py-3 px-4 text-gray-600">
                         {formatDate(request.createdAt)}
                       </td>
+
                       <td className="py-3 px-4">
                         {request.status === "pending" ? (
-                          <div className="flex gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2">
                             <button
                               onClick={() => handleApprove(request)}
                               className="px-3 py-1 text-xs rounded bg-green-100 text-green-700 hover:bg-green-200 transition"
                             >
                               Chấp nhận
                             </button>
+
                             <button
                               onClick={() => handleReject(request)}
                               className="px-3 py-1 text-xs rounded bg-red-100 text-red-700 hover:bg-red-200 transition"
@@ -199,8 +204,8 @@ export default function AdminOwnerRequest() {
         </div>
 
         {showConfirm && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4">
+            <div className="bg-white rounded-xl p-6 w-[90%] sm:w-80 shadow-lg">
               <h3 className="text-lg font-semibold mb-4">Xác nhận</h3>
 
               <p className="text-gray-600 mb-6">
@@ -215,7 +220,7 @@ export default function AdminOwnerRequest() {
                 ?
               </p>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => setShowConfirm(false)}
                   className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"

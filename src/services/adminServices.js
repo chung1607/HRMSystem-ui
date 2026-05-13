@@ -3,6 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3000/admin";
 const USER_API_URL = "http://localhost:3000/user";
 const OWNER_API_URL = "http://localhost:3000/owner-requests";
+const TEAM_API_URL = "http://localhost:3000/teams";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
@@ -15,6 +16,10 @@ axios.interceptors.request.use((config) => {
 export const getDashboardStats = () => {
   return axios.get(`${API_URL}/dashboard`);
 };
+
+export const getAllTeams = () => {
+  return axios.get(`${TEAM_API_URL}`);
+}
 
 export const getAllUsers = (query = {}) => {
   const params = new URLSearchParams();

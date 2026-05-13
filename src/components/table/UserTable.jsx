@@ -174,16 +174,18 @@ export default function UserTable() {
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold">Danh sách người dùng</h3>
+      <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+          <h3 className="text-lg sm:text-xl font-semibold">
+            Danh sách người dùng
+          </h3>
 
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Tìm kiếm theo tên hoặc SĐT..."
-              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:w-auto pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={searchTerm}
               onChange={handleSearch}
             />
@@ -191,7 +193,7 @@ export default function UserTable() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[1000px] text-left text-sm">
             <thead>
               <tr className="text-gray-600 border-b font-medium">
                 <th className="py-3 px-4">TÊN</th>
@@ -230,7 +232,7 @@ export default function UserTable() {
                   </td>
 
                   <td className="py-3 px-4">
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <button
                         onClick={() => handleClickAction(user)}
                         className={`px-3 py-1 text-xs rounded transition ${
@@ -259,7 +261,7 @@ export default function UserTable() {
           </table>
         </div>
 
-        <div className="flex justify-between items-center mt-6">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
           <span className="text-sm text-gray-600">
             Tổng: {pagination.total} | Trang {pagination.currentPage}/
             {pagination.lastPage}
@@ -286,8 +288,8 @@ export default function UserTable() {
       </div>
 
       {showConfirm && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-xl p-6 w-[90%] sm:w-80 shadow-lg">
             <h3 className="text-lg font-semibold mb-4">Xác nhận</h3>
 
             <p className="text-gray-600 mb-6">
@@ -318,7 +320,7 @@ export default function UserTable() {
               )}
             </p>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex flex-col sm:flex-row justify-end gap-2">
               <button
                 onClick={() => setShowConfirm(false)}
                 className="px-4 py-2 rounded border hover:bg-gray-50"

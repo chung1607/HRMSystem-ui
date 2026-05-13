@@ -21,7 +21,7 @@ export default function Sidebar({ isOpen, onClose }) {
       path: "/admin/requests",
     },
     {
-      label: "Quản lý Teams",
+      label: "Quản lý đội ngũ",
       icon: MdBusiness,
       path: "/admin/teams",
     },
