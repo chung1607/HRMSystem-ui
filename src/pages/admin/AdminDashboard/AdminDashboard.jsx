@@ -17,17 +17,11 @@ import {
 import AdminLayout from "../../../components/AdminLayout/AdminLayout";
 import NotFoundPage from "../../NotFoundPage/NotFoundPage";
 import DataTable from "../../../components/table/DataTable";
-import { getDashboardStats } from "../../../services/adminServices";
+import {
+  getDashboardStats,
+  getPaymentChart,
+} from "../../../services/adminServices";
 import CountUp from "react-countup";
-
-// Data mẫu
-const lineData = [
-  { name: "T1", users: 400, requests: 240 },
-  { name: "T2", users: 500, requests: 350 },
-  { name: "T3", users: 620, requests: 420 },
-  { name: "T4", users: 580, requests: 500 },
-  { name: "T5", users: 700, requests: 580 },
-];
 
 const barData = [
   { name: "Admin", value: 45 },
@@ -61,14 +55,39 @@ export default function AdminDashboard() {
     totalEmployees: 0,
   });
 
+  const [lineData, setLineData] = useState([]);
+  const [range, setRange] = useState("week");
+
   useEffect(() => {
     const userRole = localStorage.getItem("userRole");
+
     if (userRole === "admin") {
       setIsAdmin(true);
       fetchDashboardStats();
+      fetchPaymentChart(range);
     }
+
     setLoading(false);
-  }, []);
+  }, [range]);
+
+  const fetchPaymentChart = async (selectedRange = "week") => {
+    try {
+      const response = await getPaymentChart(selectedRange);
+
+      console.log("payment chart response:", response.data);
+
+      const formattedData = response.data.map((item) => ({
+        name: item.label,
+        total: Number(item.total),
+      }));
+
+      console.log("formattedData:", formattedData);
+
+      setLineData(formattedData);
+    } catch (error) {
+      console.error("Failed to fetch payment chart:", error);
+    }
+  };
 
   const fetchDashboardStats = async () => {
     try {
@@ -154,11 +173,22 @@ export default function AdminDashboard() {
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Line Chart - Người dùng & Yêu cầu theo tháng */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Người dùng & Yêu cầu (5 tháng)
-            </h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Tổng thanh toán owner
+              </h3>
+
+              <select
+                value={range}
+                onChange={(e) => setRange(e.target.value)}
+                className="border px-3 py-1 rounded-lg"
+              >
+                <option value="week">Tuần</option>
+                <option value="month">Tháng</option>
+                <option value="year">Năm</option>
+              </select>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={lineData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -168,15 +198,9 @@ export default function AdminDashboard() {
                 <Legend />
                 <Line
                   type="monotone"
-                  dataKey="users"
+                  dataKey="total"
                   stroke="#3b82f6"
-                  name="Người dùng"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="requests"
-                  stroke="#10b981"
-                  name="Yêu cầu"
+                  name="Tổng tiền"
                 />
               </LineChart>
             </ResponsiveContainer>

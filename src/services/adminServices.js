@@ -19,7 +19,7 @@ export const getDashboardStats = () => {
 
 export const getAllTeams = () => {
   return axios.get(`${TEAM_API_URL}`);
-}
+};
 
 export const getAllUsers = (query = {}) => {
   const params = new URLSearchParams();
@@ -52,4 +52,8 @@ export const approveOwnerRequest = (id) => {
 
 export const rejectOwnerRequest = (id) => {
   return axios.patch(`${OWNER_API_URL}/${id}/reject`);
+};
+
+export const getPaymentChart = (range = "week") => {
+  return axios.get(`${API_URL}/dashboard/payment-chart?range=${range}`);
 };
