@@ -1,131 +1,181 @@
+import { useEffect, useState, useCallback } from "react";
 import { FiSearch } from "react-icons/fi";
+import {
+  getSubscriptionStatus,
+  approveSubscription,
+  rejectSubscription,
+} from "../../services/adminServices";
+import toast from "react-hot-toast";
 
-export default function OwnerRequestsTable() {
-  const data = [
-    {
-      id: 1,
-      name: "Nguyễn Văn An",
-      email: "an.nguyen@acme.vn",
-      avatar: "NV",
-      role: "Admin",
-      status: "Hoạt động",
-      count: 142,
-      joinDate: "12/01/2024",
-    },
-    {
-      id: 2,
-      name: "Trần Thị Bích",
-      email: "bich.tran@acme.vn",
-      avatar: "TT",
-      role: "Editor",
-      status: "Hoạt động",
-      count: 87,
-      joinDate: "03/03/2024",
-    },
-  ];
+export default function DataTable() {
+  const [data, setData] = useState([]);
+  const [status, setStatus] = useState("all");
+  const [search, setSearch] = useState("");
 
-  const getRoleColor = (role) => {
-    const colors = {
-      Admin: "bg-blue-100 text-blue-700",
-      Editor: "bg-purple-100 text-purple-700",
-      Viewer: "bg-gray-100 text-gray-700",
-    };
-    return colors[role] || "bg-gray-100 text-gray-700";
+  const fetchSubscriptions = useCallback(async () => {
+    try {
+      const response = await getSubscriptionStatus(status);
+      setData(response.data);
+    } catch {
+      toast.error("Không tải được subscription");
+    }
+  }, [status]);
+
+  useEffect(() => {
+    fetchSubscriptions();
+  }, [fetchSubscriptions]);
+
+  const handleApprove = async (id) => {
+    try {
+      await approveSubscription(id);
+      toast.success("Đã duyệt");
+      fetchSubscriptions();
+    } catch {
+      toast.error("Approve thất bại");
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      await rejectSubscription(id);
+      toast.success("Đã từ chối");
+      fetchSubscriptions();
+    } catch {
+      toast.error("Reject thất bại");
+    }
   };
 
   const getStatusColor = (status) => {
-    return status === "Hoạt động"
-      ? "bg-green-100 text-green-700"
-      : "bg-yellow-100 text-yellow-700";
+    const colors = {
+      approved: "bg-green-100 text-green-700",
+      pending: "bg-yellow-100 text-yellow-700",
+      rejected: "bg-red-100 text-red-700",
+    };
+
+    return colors[status];
   };
+
+  const filteredData = data.filter(
+    (item) =>
+      item.ownerName.toLowerCase().includes(search.toLowerCase()) ||
+      item.teamName.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-5">
-        <h3 className="text-lg sm:text-xl font-semibold">Owner Requests</h3>
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-5">
+        <h3 className="text-lg font-semibold">Thanh toán phí hàng tháng</h3>
 
-        <div className="relative w-full sm:w-72">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Tìm kiếm..."
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-          />
+        <div className="flex flex-col md:flex-row gap-3 w-full lg:w-auto">
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="border px-3 py-2 rounded-lg w-full md:w-44"
+          >
+            <option value="all">Tất cả</option>
+            <option value="paid">Đã đóng</option>
+            <option value="unpaid">Chưa đóng</option>
+          </select>
+
+          <div className="relative w-full md:w-72">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border rounded-lg"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Responsive table */}
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] text-left text-sm">
+      <div className="overflow-x-auto rounded-lg">
+        <table className="w-full min-w-[1000px] text-left text-sm">
           <thead>
             <tr className="text-gray-600 border-b font-medium">
-              <th className="py-3 px-4">NGƯỜI DÙNG</th>
-              <th className="py-3 px-4">VAI TRÒ</th>
+              <th className="py-3 px-4">OWNER</th>
+              <th className="py-3 px-4">TEAM</th>
+              <th className="py-3 px-4">THÁNG</th>
+              <th className="py-3 px-4">PHÍ</th>
               <th className="py-3 px-4">TRẠNG THÁI</th>
-              <th className="py-3 px-4">ĐƠN HÀNG</th>
-              <th className="py-3 px-4">NGÀY THAM GIA</th>
+              <th className="py-3 px-4 text-center">MINH CHỨNG</th>
               <th className="py-3 px-4 text-center">ACTION</th>
             </tr>
           </thead>
 
           <tbody>
-            {data.map((item) => (
-              <tr
-                key={item.id}
-                className="border-b hover:bg-gray-50 transition"
-              >
-                <td className="py-3 px-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center text-sm font-semibold">
-                      {item.avatar}
-                    </div>
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-xs text-gray-500 break-all">
-                        {item.email}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-3 py-1 rounded text-xs font-medium ${getRoleColor(
-                      item.role,
-                    )}`}
-                  >
-                    {item.role}
-                  </span>
-                </td>
-
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-3 py-1 rounded text-xs font-medium ${getStatusColor(
-                      item.status,
-                    )}`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
-
-                <td className="py-3 px-4">{item.count}</td>
-
-                <td className="py-3 px-4">{item.joinDate}</td>
-
-                <td className="py-3 px-4">
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                    <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition">
-                      Approve
-                    </button>
-
-                    <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition">
-                      Reject
-                    </button>
-                  </div>
+            {filteredData.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="py-8 text-center text-gray-500">
+                  {status === "paid"
+                    ? "Không có owner nào đã đóng phí"
+                    : status === "unpaid"
+                      ? "Không có owner nào chưa đóng phí"
+                      : "Không có dữ liệu"}
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredData.map((item) => (
+                <tr key={item.id} className="border-b hover:bg-gray-50">
+                  <td className="py-3 px-4">{item.ownerName}</td>
+                  <td className="py-3 px-4">{item.teamName}</td>
+                  <td className="py-3 px-4 whitespace-nowrap">{item.month}</td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {Number(item.amount).toLocaleString()} VNĐ
+                  </td>
+
+                  <td className="py-3 px-4">
+                    <span
+                      className={`px-3 py-1 rounded text-xs font-medium ${getStatusColor(
+                        item.status,
+                      )}`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
+
+                  <td className="py-3 px-4 text-center">
+                    {item.proofImage ? (
+                      <a
+                        href={`http://localhost:3000/${item.proofImage}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 underline hover:text-blue-800 inline-block"
+                      >
+                        Xem
+                      </a>
+                    ) : (
+                      <span className="text-gray-400">Không có</span>
+                    )}
+                  </td>
+
+                  <td className="py-3 px-4">
+                    {item.status === "pending" ? (
+                      <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                        <button
+                          onClick={() => handleApprove(item.id)}
+                          className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
+                        >
+                          Approve
+                        </button>
+
+                        <button
+                          onClick={() => handleReject(item.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 text-sm italic flex justify-center">
+                        Đã xử lý
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

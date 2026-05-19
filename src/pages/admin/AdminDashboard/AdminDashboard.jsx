@@ -20,6 +20,7 @@ import DataTable from "../../../components/table/DataTable";
 import {
   getDashboardStats,
   getPaymentChart,
+  getUnpaidOwnersStats,
 } from "../../../services/adminServices";
 import CountUp from "react-countup";
 
@@ -55,6 +56,12 @@ export default function AdminDashboard() {
     totalEmployees: 0,
   });
 
+  const [unpaidStats, setUnpaidStats] = useState({
+    unpaid: 0,
+    total: 0,
+    percent: 0,
+  });
+
   const [lineData, setLineData] = useState([]);
   const [range, setRange] = useState("week");
 
@@ -64,11 +71,21 @@ export default function AdminDashboard() {
     if (userRole === "admin") {
       setIsAdmin(true);
       fetchDashboardStats();
+      fetchUnpaidStats();
       fetchPaymentChart(range);
     }
 
     setLoading(false);
   }, [range]);
+
+  const fetchUnpaidStats = async () => {
+    try {
+      const response = await getUnpaidOwnersStats();
+      setUnpaidStats(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchPaymentChart = async (selectedRange = "week") => {
     try {
@@ -120,8 +137,8 @@ export default function AdminDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600">
-            <div className="text-gray-500 text-sm font-medium">
-              Tổng số người dùng (users)
+            <div className="text-gray-500 text-md font-medium">
+              Tổng số người dùng
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
               <CountUp
@@ -132,8 +149,8 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600">
-            <div className="text-gray-500 text-sm font-medium">
-              Tổng số chủ quản lý (owners)
+            <div className="text-gray-500 text-md font-medium">
+              Tổng số chủ quản lý
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
               <CountUp
@@ -144,8 +161,8 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-600">
-            <div className="text-gray-500 text-sm font-medium">
-              Tổng số tổ công (teams)
+            <div className="text-gray-500 text-md font-medium">
+              Tổng số tổ công
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
               <CountUp
@@ -156,8 +173,8 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600">
-            <div className="text-gray-500 text-sm font-medium">
-              Tổng số nhân công (employees)
+            <div className="text-gray-500 text-md font-medium">
+              Tổng số nhân công
             </div>
             <div className="text-3xl font-bold text-gray-900 mt-2">
               <CountUp
@@ -171,12 +188,35 @@ export default function AdminDashboard() {
 
         <DataTable />
 
+        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600 mb-8">
+          <div className="text-gray-500 text-sm font-medium">
+            Owner chưa đóng phí
+          </div>
+
+          <div className="text-3xl font-bold text-gray-900 mt-2">
+            {unpaidStats.unpaid} / {unpaidStats.total}
+          </div>
+
+          <div className="mt-3">
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className="bg-purple-600 h-2.5 rounded-full"
+                style={{ width: `${unpaidStats.percent}%` }}
+              />
+            </div>
+
+            <p className="text-sm text-gray-500 mt-2">
+              {unpaidStats.percent}% owner chưa thanh toán tháng này
+            </p>
+          </div>
+        </div>
+
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                Tổng thanh toán owner
+                Thống kê thanh toán chủ quản lý
               </h3>
 
               <select
@@ -192,9 +232,14 @@ export default function AdminDashboard() {
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={lineData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="name" tick={false} axisLine={false} />
                 <YAxis />
-                <Tooltip />
+                <Tooltip
+                  formatter={(value) => [
+                    `${Number(value).toLocaleString("vi-VN")} VNĐ`,
+                    "Tổng tiền",
+                  ]}
+                />
                 <Legend />
                 <Line
                   type="monotone"

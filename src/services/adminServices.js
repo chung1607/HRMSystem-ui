@@ -4,6 +4,7 @@ const API_URL = "http://localhost:3000/admin";
 const USER_API_URL = "http://localhost:3000/user";
 const OWNER_API_URL = "http://localhost:3000/owner-requests";
 const TEAM_API_URL = "http://localhost:3000/teams";
+const SUBSCRIPTION_API_URL = "http://localhost:3000/owner-subscriptions";
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
@@ -56,4 +57,20 @@ export const rejectOwnerRequest = (id) => {
 
 export const getPaymentChart = (range = "week") => {
   return axios.get(`${API_URL}/dashboard/payment-chart?range=${range}`);
+};
+
+export const getSubscriptionStatus = (status = "all") => {
+  return axios.get(`${SUBSCRIPTION_API_URL}/status?status=${status}`);
+};
+
+export const approveSubscription = (id) => {
+  return axios.patch(`${SUBSCRIPTION_API_URL}/${id}/approve`);
+};
+
+export const rejectSubscription = (id) => {
+  return axios.patch(`${SUBSCRIPTION_API_URL}/${id}/reject`);
+};
+
+export const getUnpaidOwnersStats = () => {
+  return axios.get(`${SUBSCRIPTION_API_URL}/dashboard-unpaid`);
 };
