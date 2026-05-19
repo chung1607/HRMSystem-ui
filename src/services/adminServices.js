@@ -74,3 +74,15 @@ export const rejectSubscription = (id) => {
 export const getUnpaidOwnersStats = () => {
   return axios.get(`${SUBSCRIPTION_API_URL}/dashboard-unpaid`);
 };
+
+export const getSugarcaneByTeam = () => {
+  return axios.get(`${API_URL}/dashboard/sugarcane-team`);
+};
+
+export const getSubscriptionStatusStats = () => {
+  return axios.get(`${API_URL}/dashboard/subscription-status`);
+};
+
+export const getTeamPerformance = () => {
+  return axios.get(`${API_URL}/dashboard/team-performance`);
+};

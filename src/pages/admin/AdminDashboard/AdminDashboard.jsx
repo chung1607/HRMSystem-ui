@@ -21,30 +21,13 @@ import {
   getDashboardStats,
   getPaymentChart,
   getUnpaidOwnersStats,
+  getSugarcaneByTeam,
+  getSubscriptionStatusStats,
+  getTeamPerformance,
 } from "../../../services/adminServices";
 import CountUp from "react-countup";
 
-const barData = [
-  { name: "Admin", value: 45 },
-  { name: "Editor", value: 120 },
-  { name: "Viewer", value: 200 },
-];
-
-const pieData = [
-  { name: "Hoạt động", value: 780 },
-  { name: "Không hoạt động", value: 150 },
-  { name: "Chờ duyệt", value: 304 },
-];
-
-const requestData = [
-  { name: "T1", thanh_toan: 45, nang_cap: 30, khac: 20 },
-  { name: "T2", thanh_toan: 60, nang_cap: 45, khac: 25 },
-  { name: "T3", thanh_toan: 75, nang_cap: 55, khac: 35 },
-  { name: "T4", thanh_toan: 80, nang_cap: 60, khac: 40 },
-  { name: "T5", thanh_toan: 95, nang_cap: 70, khac: 50 },
-];
-
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
+const COLORS = ["#2563eb", "#38bdf8", "#93c5fd"];
 
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -65,6 +48,10 @@ export default function AdminDashboard() {
   const [lineData, setLineData] = useState([]);
   const [range, setRange] = useState("week");
 
+  const [barData, setBarData] = useState([]);
+  const [pieData, setPieData] = useState([]);
+  const [requestData, setRequestData] = useState([]);
+
   useEffect(() => {
     const userRole = localStorage.getItem("userRole");
 
@@ -73,6 +60,9 @@ export default function AdminDashboard() {
       fetchDashboardStats();
       fetchUnpaidStats();
       fetchPaymentChart(range);
+      fetchSugarcaneByTeam();
+      fetchSubscriptionStatus();
+      fetchTeamPerformance();
     }
 
     setLoading(false);
@@ -82,6 +72,61 @@ export default function AdminDashboard() {
     try {
       const response = await getUnpaidOwnersStats();
       setUnpaidStats(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchSugarcaneByTeam = async () => {
+    try {
+      const response = await getSugarcaneByTeam();
+
+      const formattedData = response.data.map((item) => ({
+        name: item.name,
+        fresh: Number(item.fresh),
+        burnt: Number(item.burnt),
+      }));
+
+      setBarData(formattedData);
+    } catch (error) {
+      console.error("Failed to fetch sugarcane stats:", error);
+    }
+  };
+
+  const fetchSubscriptionStatus = async () => {
+    try {
+      const response = await getSubscriptionStatusStats();
+
+      setPieData([
+        {
+          name: "Đã duyệt",
+          value: response.data.approved,
+        },
+        {
+          name: "Chờ duyệt",
+          value: response.data.pending,
+        },
+        {
+          name: "Từ chối",
+          value: response.data.rejected,
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchTeamPerformance = async () => {
+    try {
+      const response = await getTeamPerformance();
+
+      const formattedData = response.data.map((item) => ({
+        name: item.name,
+        member: item.member,
+        total: Number(item.total),
+      }));
+
+      setRequestData(formattedData);
     } catch (error) {
       console.error(error);
     }
@@ -211,12 +256,11 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                Thống kê thanh toán chủ quản lý
+                Thống kê thanh toán của chủ quản lý
               </h3>
 
               <select
@@ -251,38 +295,56 @@ export default function AdminDashboard() {
             </ResponsiveContainer>
           </div>
 
-          {/* Bar Chart - Phân bổ theo vai trò */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Phân bổ theo vai trò
+              Sản lượng mía theo tổ công
             </h3>
+
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={barData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" fill="#3b82f6" name="Số lượng" />
+                <Tooltip
+                  formatter={(value, name) => [
+                    `${Number(value).toLocaleString("vi-VN")} bó`,
+                    name === "fresh" ? "Mía tươi" : "Mía cháy",
+                  ]}
+                />
+                <Legend />
+
+                <Bar
+                  dataKey="fresh"
+                  stackId="a"
+                  fill="#2563eb"
+                  name="Mía tươi"
+                />
+
+                <Bar
+                  dataKey="burnt"
+                  stackId="a"
+                  fill="#38bdf8"
+                  name="Mía cháy"
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart - Trạng thái người dùng */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Trạng thái người dùng
+              Trạng thái thanh toán của chủ quản lý
             </h3>
+
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${value}`}
-                  outerRadius={80}
-                  fill="#8884d8"
+                  outerRadius={90}
                   dataKey="value"
+                  labelLine={false}
+                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                 >
                   {pieData.map((entry, index) => (
                     <Cell
@@ -291,36 +353,40 @@ export default function AdminDashboard() {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
+
+                <Tooltip
+                  formatter={(value, name) => [`${value} owner`, name]}
+                />
+
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Bar Chart - Loại yêu cầu */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Loại yêu cầu theo tháng
+              Người kiếm nhiều nhất mỗi tổ công
             </h3>
+
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={requestData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip />
+
+                <Tooltip
+                  formatter={(value) => [
+                    `${Number(value).toLocaleString("vi-VN")} VNĐ`,
+                    "Doanh thu",
+                  ]}
+                  labelFormatter={(label, payload) =>
+                    payload?.[0]?.payload?.member || label
+                  }
+                />
+
                 <Legend />
-                <Bar
-                  dataKey="thanh_toan"
-                  stackId="a"
-                  fill="#3b82f6"
-                  name="Thanh toán"
-                />
-                <Bar
-                  dataKey="nang_cap"
-                  stackId="a"
-                  fill="#10b981"
-                  name="Nâng cấp"
-                />
-                <Bar dataKey="khac" stackId="a" fill="#f59e0b" name="Khác" />
+
+                <Bar dataKey="total" fill="#2563eb" name="Doanh thu cao nhất" />
               </BarChart>
             </ResponsiveContainer>
           </div>
