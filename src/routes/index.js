@@ -8,6 +8,7 @@ import AdminUsers from "../pages/admin/AdminUsers/AdminUsers";
 import AdminOwnerRequest from "../pages/admin/AdminOwnerRequest/AdminOwnerRequest";
 import AdminTeams from "../pages/admin/AdminTeams/AdminTeams";
 import Test from "../TestConnect";
+import OwnerDashboard from "../pages/owner/OwnerDashboard/OwnerDashboard";
 const routes = [
   {
     path: "/",
@@ -58,6 +59,11 @@ const routes = [
     path: "/test",
     page: Test,
     isShowHeader: false,
+  },
+  {
+    path: "/owner/dashboard",
+    page: OwnerDashboard,
+    isShowHeader: true,
   },
 ];
 

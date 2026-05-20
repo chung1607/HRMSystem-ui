@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Sidebar from "../SidebarComponent/SidebarAdmin";
+import Sidebar from "../SidebarComponent/SidebarOwner";
 import HeaderComponent from "../HeaderComponent/HeaderComponent";
 import FooterComponent from "../FooterComponent/FooterComponent";
 
-export default function AdminLayout({ children }) {
+export default function OwnerLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
