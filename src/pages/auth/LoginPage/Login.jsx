@@ -29,8 +29,6 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
-
-      // 🔥 transform data theo backend
       const payload = {
         password: form.password,
         ...(isPhone(form.identifier)
@@ -40,15 +38,14 @@ export default function LoginPage() {
 
       const res = await login(payload);
 
-      // console.log("Login success:", res.data);
       toast.success("Đăng nhập thành công!");
 
-      // lưu token
       localStorage.setItem("access_token", res.data.access_token);
       localStorage.setItem("refresh_token", res.data.refresh_token);
 
-      const decoded = JSON.parse(atob(res.data.access_token.split(".")[1]));
-      localStorage.setItem("userRole", decoded.role);
+      localStorage.setItem("userInfo", JSON.stringify(res.data.user));
+
+      localStorage.setItem("userRole", res.data.user.role);
 
       navigate("/");
     } catch (err) {
@@ -65,7 +62,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md min-w-[360px] bg-white rounded-2xl border border-gray-200 shadow-lg p-6 sm:p-8">
-        {/* Logo */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center">
             <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">

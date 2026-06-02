@@ -21,3 +21,17 @@ export const getTopWorkers = () => {
 export const getRecentWorkLogs = () => {
   return axios.get(`${API_URL_OWNER}/dashboard/recent-work-logs`);
 };
+
+export const getTeamMembers = (page = 1, limit = 10, search = "") => {
+  return axios.get(
+    `${API_URL_OWNER}/team-members?page=${page}&limit=${limit}&search=${search}`,
+  );
+};
+
+export const getTeamMemberStats = () => {
+  return axios.get(`${API_URL_OWNER}/team-members/stats`);
+};
+
+export const updateTeamMemberStatus = (id) => {
+  return axios.patch(`${API_URL_OWNER}/team-members/${id}/status`);
+};

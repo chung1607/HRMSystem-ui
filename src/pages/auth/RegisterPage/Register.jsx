@@ -34,7 +34,6 @@ export default function RegisterPage() {
       console.log("Register success:", res.data);
       await sendOtp(form.phone);
       toast.success("Đăng ký thành công! Kiểm tra OTP");
-      // reset form
       setForm({
         username: "",
         password: "",
@@ -59,7 +58,6 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md min-w-[360px] bg-white rounded-2xl border border-gray-200 shadow-lg p-6 sm:p-8">
-        {/* Logo */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center">
             <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">
@@ -74,7 +72,6 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Header */}
         <div className="mb-5">
           <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
             Tạo tài khoản
@@ -84,9 +81,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Error */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">
               {error}
@@ -143,7 +138,6 @@ export default function RegisterPage() {
           </p>
         </form>
 
-        {/* Login link */}
         <p className="text-sm text-center text-gray-500 mt-5">
           Đã có tài khoản?{" "}
           <a
